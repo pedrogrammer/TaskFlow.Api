@@ -159,3 +159,4 @@ C:\Users\Pedram Sheikhrahimi\Documents\Projects\Practice\TaskFlow.Api\bin\Debug\
 C:\Users\Pedram Sheikhrahimi\Documents\Projects\Practice\TaskFlow.Api\bin\Debug\net10.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Pedram Sheikhrahimi\Documents\Projects\Practice\TaskFlow.Api\bin\Debug\net10.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Pedram Sheikhrahimi\Documents\Projects\Practice\TaskFlow.Api\bin\Debug\net10.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Users\Pedram Sheikhrahimi\Documents\Projects\Practice\TaskFlow.Api\obj\Debug\net10.0\TaskFlow.Api.sourcelink.json
