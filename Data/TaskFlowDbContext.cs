@@ -18,35 +18,52 @@ public class TaskFlowDbContext : DbContext
   {
     base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Entity<User>()
-        .HasIndex(u => u.Email)
-        .IsUnique();
+    // =========================
+    // User
+    // =========================
+    modelBuilder.Entity<User>(entity =>
+    {
+      entity.HasIndex(u => u.Email).IsUnique();
+      entity.Property(u => u.Email)
+        .IsRequired()
+        .HasMaxLength(200);
+    });
 
-    modelBuilder.Entity<User>().Property(u => u.Email).IsRequired().HasMaxLength(200);
-
-    modelBuilder.Entity<Project>()
-        .HasOne(p => p.Owner)
+    // =========================
+    // Project
+    // =========================
+    modelBuilder.Entity<Project>(entity =>
+    {
+      entity.HasOne(p => p.Owner)
         .WithMany(u => u.Projects)
         .HasForeignKey(p => p.OwnerId)
         .OnDelete(DeleteBehavior.Restrict);
 
-    modelBuilder.Entity<Project>().HasIndex(p => p.Name);
+      entity.Property(p => p.Name)
+        .IsRequired()
+        .HasMaxLength(100);
 
-    modelBuilder.Entity<Project>().Property(p => p.Name).IsRequired().HasMaxLength(100);
+      entity.HasIndex(p => p.Name);
+      entity.HasIndex(p => new { p.OwnerId, p.Name })
+        .IsUnique();
+    });
 
-    modelBuilder.Entity<Project>().HasIndex(p => new { p.OwnerId, p.Name }).IsUnique();
-
-    modelBuilder.Entity<TaskItem>()
-        .HasOne(t => t.Project)
+    // =========================
+    // TaskItem
+    // =========================
+    modelBuilder.Entity<TaskItem>(entity =>
+    {
+      entity.HasOne(t => t.Project)
         .WithMany(p => p.Tasks)
         .HasForeignKey(t => t.ProjectId)
         .OnDelete(DeleteBehavior.Cascade);
 
-    modelBuilder.Entity<TaskItem>()
-        .Property(t => t.Status)
+      entity.Property(t => t.Status)
         .HasConversion<string>()
         .HasMaxLength(50);
 
-    modelBuilder.Entity<TaskItem>().HasIndex(t => new { t.ProjectId, t.Status });
+      entity.HasIndex(t => new { t.ProjectId, t.Status });
+    });
   }
+
 }
