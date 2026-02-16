@@ -3568,23 +3568,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Pedram Sheikhrahimi\\.nuget\\packages\\": {},
+    "C:\\Users\\p.sheikhrahimi\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Pedram Sheikhrahimi\\Documents\\Projects\\Practice\\TaskFlow.Api\\TaskFlow.Api.csproj",
+      "projectUniqueName": "C:\\Users\\p.sheikhrahimi\\Documents\\TaskFlow.Api\\TaskFlow.Api.csproj",
       "projectName": "TaskFlow.Api",
-      "projectPath": "C:\\Users\\Pedram Sheikhrahimi\\Documents\\Projects\\Practice\\TaskFlow.Api\\TaskFlow.Api.csproj",
-      "packagesPath": "C:\\Users\\Pedram Sheikhrahimi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Pedram Sheikhrahimi\\Documents\\Projects\\Practice\\TaskFlow.Api\\obj\\",
+      "projectPath": "C:\\Users\\p.sheikhrahimi\\Documents\\TaskFlow.Api\\TaskFlow.Api.csproj",
+      "packagesPath": "C:\\Users\\p.sheikhrahimi\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\p.sheikhrahimi\\Documents\\TaskFlow.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Pedram Sheikhrahimi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\p.sheikhrahimi\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
