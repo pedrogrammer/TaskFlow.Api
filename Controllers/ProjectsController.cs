@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TaskFlow.Api.Data;
 using TaskFlow.Api.DTOs.Projects;
-using TaskFlow.Api.Models;
+using TaskFlow.Api.Services;
 
 namespace TaskFlow.Api.Controllers;
 
@@ -10,41 +8,31 @@ namespace TaskFlow.Api.Controllers;
 [Route("api/projects")]
 public class ProjectsController : ControllerBase
 {
-  private readonly TaskFlowDbContext _context;
+  private readonly IProjectService _projectService;
 
-  public ProjectsController(TaskFlowDbContext context)
+  public ProjectsController(IProjectService projectService)
   {
-    _context = context;
+    _projectService = projectService;
   }
 
   [HttpPost]
   public async Task<ActionResult<ProjectResponseDto>> Create(CreateProjectDto dto)
   {
-    var project = new Project
-    {
-      Name = dto.Name,
-      Description = dto.Description,
-      OwnerId = dto.OwnerId
-    };
+    var result = await _projectService.CreateAsync(dto);
 
-    _context.Projects.Add(project);
-    await _context.SaveChangesAsync();
-
-    var response = new ProjectResponseDto
-    {
-      Id = project.Id,
-      Name = project.Name,
-      Description = project.Description,
-      OwnerId = project.OwnerId,
-      CreatedAt = project.CreatedAt
-    };
-
-    return CreatedAtAction(nameof(GetById), new { id = project.Id }, response);
+    return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
   }
 
   [HttpGet("{id:guid}")]
   public async Task<ActionResult<ProjectResponseDto>> GetById(Guid id)
   {
+    var result = await _projectService.GetByIdAsync(id);
+
+    if(result is null)
+    {
+      return NotFound();
+    }
+
     var project = await _context.Projects
         .AsNoTracking()
         .FirstOrDefaultAsync(p => p.Id == id);

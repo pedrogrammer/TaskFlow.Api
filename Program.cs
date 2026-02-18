@@ -1,6 +1,7 @@
 using Microsoft.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Api.Data;
+using TaskFlow.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Task and Project Management API built with ASP.NET Core (.NET 10)"
     });
 });
+
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 var app = builder.Build();
 
