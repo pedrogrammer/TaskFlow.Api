@@ -1,17 +1,16 @@
-using Microsoft.EntityFrameworkCore;
-using TaskFlow.Api.Data;
 using TaskFlow.Api.DTOs.Projects;
 using TaskFlow.Api.Models;
+using TaskFlow.Api.Repositories;
 
 namespace TaskFlow.Api.Services;
 
 public class ProjectService : IProjectService
 {
-  private readonly TaskFlowDbContext _context;
+  private readonly IProjectRepository _repository;
 
-  public ProjectService(TaskFlowDbContext context)
+  public ProjectService(IProjectRepository repository)
   {
-    _context = context;
+    _repository = repository;
   }
 
   public async Task<ProjectResponseDto> CreateAsync(CreateProjectDto dto)
@@ -23,24 +22,20 @@ public class ProjectService : IProjectService
       OwnerId = dto.OwnerId
     };
 
-    _context.Projects.Add(project);
-    await _context.SaveChangesAsync();
+    await _repository.AddAsync(project);
 
     return MapToResponse(project);
   }
 
   public async Task<ProjectResponseDto?> GetByIdAsync(Guid id)
   {
-    var project = await _context.Projects
-        .AsNoTracking()
-        .FirstOrDefaultAsync(p => p.Id == id);
-
+    var project = await _repository.GetByIdAsync(id);
     return project is null ? null : MapToResponse(project);
   }
 
   public async Task<bool> UpdateAsync(Guid id, UpdateProjectDto dto)
   {
-    var project = await _context.Projects.FindAsync(id);
+    var project = await _repository.GetByIdAsync(id);
 
     if (project is null)
       return false;
@@ -48,19 +43,18 @@ public class ProjectService : IProjectService
     project.Name = dto.Name;
     project.Description = dto.Description;
 
-    await _context.SaveChangesAsync();
+    await _repository.UpdateAsync(project);
     return true;
   }
 
   public async Task<bool> DeleteAsync(Guid id)
   {
-    var project = await _context.Projects.FindAsync(id);
+    var project = await _repository.GetByIdAsync(id);
 
     if (project is null)
       return false;
 
-    _context.Projects.Remove(project);
-    await _context.SaveChangesAsync();
+    await _repository.DeleteAsync(project);
     return true;
   }
 
