@@ -28,40 +28,19 @@ public class ProjectsController : ControllerBase
   {
     var result = await _projectService.GetByIdAsync(id);
 
-    if(result is null)
-    {
-      return NotFound();
-    }
-
-    var project = await _context.Projects
-        .AsNoTracking()
-        .FirstOrDefaultAsync(p => p.Id == id);
-
-    if (project is null)
+    if (result is null)
       return NotFound();
 
-    return new ProjectResponseDto
-    {
-      Id = project.Id,
-      Name = project.Name,
-      Description = project.Description,
-      OwnerId = project.OwnerId,
-      CreatedAt = project.CreatedAt
-    };
+    return Ok(result);
   }
 
   [HttpPut("{id:guid}")]
   public async Task<IActionResult> Update(Guid id, UpdateProjectDto dto)
   {
-    var project = await _context.Projects.FindAsync(id);
+    var updated = await _projectService.UpdateAsync(id, dto);
 
-    if (project is null)
+    if (!updated)
       return NotFound();
-
-    project.Name = dto.Name;
-    project.Description = dto.Description;
-
-    await _context.SaveChangesAsync();
 
     return NoContent();
   }
@@ -69,13 +48,10 @@ public class ProjectsController : ControllerBase
   [HttpDelete("{id:guid}")]
   public async Task<IActionResult> Delete(Guid id)
   {
-    var project = await _context.Projects.FindAsync(id);
+    var deleted = await _projectService.DeleteAsync(id);
 
-    if (project is null)
+    if (!deleted)
       return NotFound();
-
-    _context.Projects.Remove(project);
-    await _context.SaveChangesAsync();
 
     return NoContent();
   }
