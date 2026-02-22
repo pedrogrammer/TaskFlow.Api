@@ -5,7 +5,6 @@ using TaskFlow.Api.Services;
 using TaskFlow.Api.Repositories;
 using TaskFlow.Api.Middlewares;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // ======================
@@ -59,5 +58,47 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+var diagnostics = app.MapGroup("/api/diagnostics");
+
+diagnostics.MapGet("/health", () =>
+{
+  return Results.Ok(new
+  {
+    status = "Healthy",
+    utcTime = DateTime.UtcNow
+  });
+})
+.WithName("HealthCheck")
+.WithTags("Diagnostics")
+.WithOpenApi();
+
+diagnostics.MapGet("/stats",
+    async (TaskFlowDbContext context) =>
+    {
+      var projectCount = await context.Projects.CountAsync();
+      var taskCount = await context.Tasks.CountAsync();
+
+      return Results.Ok(new
+      {
+        totalProjects = projectCount,
+        totalTasks = taskCount
+      });
+    })
+.WithName("GetStatistics")
+.WithTags("Diagnostics")
+.WithOpenApi();
+
+diagnostics.MapPost("/echo",
+    (object payload) =>
+    {
+      return Results.Ok(new
+      {
+        received = payload,
+        timestamp = DateTime.UtcNow
+      });
+    })
+.WithTags("Diagnostics")
+.WithOpenApi();
 
 app.Run();
