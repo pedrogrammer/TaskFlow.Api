@@ -10,7 +10,7 @@ public class TaskItem
   [MaxLength(200)]
   public string Title { get; set; } = default!;
 
-  public TaskStatus Status { get; set; } = TaskStatus.Todo;
+  public CurrentTaskStatus Status { get; set; } = CurrentTaskStatus.Todo;
 
   [Required]
   public Guid ProjectId { get; set; }

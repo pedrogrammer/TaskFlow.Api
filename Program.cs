@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TaskFlow.Api.Data;
 using TaskFlow.Api.Services;
 using TaskFlow.Api.Repositories;
-using TaskFlow.Api.Repositories;
-using TaskFlow.Api.Services;
+using TaskFlow.Api.Middlewares;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,19 +18,19 @@ string connectionString = builder.Configuration["DefaultConnection"];
 
 builder.Services.AddDbContext<TaskFlowDbContext>(options =>
 {
-    options.UseSqlServer(connectionString);
+  options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "TaskFlow API",
-        Version = "v1",
-        Description = "Task and Project Management API built with ASP.NET Core (.NET 10)"
-    });
+  options.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Title = "TaskFlow API",
+    Version = "v1",
+    Description = "Task and Project Management API built with ASP.NET Core (.NET 10)"
+  });
 });
 
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
@@ -46,9 +46,13 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseHttpsRedirection();
 

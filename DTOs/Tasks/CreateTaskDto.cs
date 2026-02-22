@@ -11,5 +11,5 @@ public class CreateTaskDto
 
   public DateTime? DueDate { get; set; }
 
-  public TaskStatus Status { get; set; } = TaskStatus.Todo;
+  public CurrentTaskStatus Status { get; set; } = CurrentTaskStatus.Todo;
 }
