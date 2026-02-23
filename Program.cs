@@ -1,11 +1,11 @@
-using Microsoft.OpenApi;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using TaskFlow.Api.Data;
-using TaskFlow.Api.Services;
-using TaskFlow.Api.Repositories;
 using TaskFlow.Api.Middlewares;
+using TaskFlow.Api.Repositories;
+using TaskFlow.Api.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // ======================
 // Services
@@ -17,19 +17,22 @@ string connectionString = builder.Configuration["DefaultConnection"];
 
 builder.Services.AddDbContext<TaskFlowDbContext>(options =>
 {
-  options.UseSqlServer(connectionString);
+    options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
-  options.SwaggerDoc("v1", new OpenApiInfo
-  {
-    Title = "TaskFlow API",
-    Version = "v1",
-    Description = "Task and Project Management API built with ASP.NET Core (.NET 10)"
-  });
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "TaskFlow API",
+        Version = "v1",
+        Description = "Task and Project Management API built with ASP.NET Core (.NET 10)"
+    });
+
+    string xmlFilename = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
@@ -37,7 +40,7 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // ======================
 // Middleware Pipeline
@@ -45,8 +48,8 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -59,15 +62,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-var diagnostics = app.MapGroup("/api/diagnostics");
+RouteGroupBuilder diagnostics = app.MapGroup("/api/diagnostics");
 
 diagnostics.MapGet("/health", () =>
 {
-  return Results.Ok(new
-  {
-    status = "Healthy",
-    utcTime = DateTime.UtcNow
-  });
+    return Results.Ok(new
+    {
+        status = "Healthy",
+        utcTime = DateTime.UtcNow
+    });
 })
 .WithName("HealthCheck")
 .WithTags("Diagnostics")
@@ -76,14 +79,14 @@ diagnostics.MapGet("/health", () =>
 diagnostics.MapGet("/stats",
     async (TaskFlowDbContext context) =>
     {
-      var projectCount = await context.Projects.CountAsync();
-      var taskCount = await context.Tasks.CountAsync();
+        int projectCount = await context.Projects.CountAsync();
+        int taskCount = await context.Tasks.CountAsync();
 
-      return Results.Ok(new
-      {
-        totalProjects = projectCount,
-        totalTasks = taskCount
-      });
+        return Results.Ok(new
+        {
+            totalProjects = projectCount,
+            totalTasks = taskCount
+        });
     })
 .WithName("GetStatistics")
 .WithTags("Diagnostics")
@@ -92,11 +95,11 @@ diagnostics.MapGet("/stats",
 diagnostics.MapPost("/echo",
     (object payload) =>
     {
-      return Results.Ok(new
-      {
-        received = payload,
-        timestamp = DateTime.UtcNow
-      });
+        return Results.Ok(new
+        {
+            received = payload,
+            timestamp = DateTime.UtcNow
+        });
     })
 .WithTags("Diagnostics")
 .WithOpenApi();

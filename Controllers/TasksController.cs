@@ -8,30 +8,30 @@ namespace TaskFlow.Api.Controllers;
 [Route("api/projects/{projectId:guid}/tasks")]
 public class TasksController : ControllerBase
 {
-  private readonly ITaskService _service;
+    private readonly ITaskService _service;
 
-  public TasksController(ITaskService service)
-  {
-    _service = service;
-  }
+    public TasksController(ITaskService service)
+    {
+        _service = service;
+    }
 
-  [HttpPost]
-  public async Task<ActionResult<TaskResponseDto>> Create(
-      Guid projectId,
-      CreateTaskDto dto)
-  {
-    var result = await _service.CreateAsync(projectId, dto);
-    return Ok(result);
-  }
+    [HttpPost]
+    public async Task<ActionResult<TaskResponseDto>> Create(
+        Guid projectId,
+        CreateTaskDto dto)
+    {
+        TaskResponseDto result = await _service.CreateAsync(projectId, dto);
+        return Ok(result);
+    }
 
-  [HttpGet]
-  public async Task<ActionResult<IEnumerable<TaskResponseDto>>> Get(
-      Guid projectId,
-      int page = 1,
-      int pageSize = 10,
-      string? sortBy = null)
-  {
-    var result = await _service.GetByProjectAsync(projectId, page, pageSize, sortBy);
-    return Ok(result);
-  }
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<TaskResponseDto>>> Get(
+        Guid projectId,
+        int page = 1,
+        int pageSize = 10,
+        string? sortBy = null)
+    {
+        IEnumerable<TaskResponseDto> result = await _service.GetByProjectAsync(projectId, page, pageSize, sortBy);
+        return Ok(result);
+    }
 }

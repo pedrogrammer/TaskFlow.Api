@@ -484,3 +484,4 @@ D:\TaskFlow.Api\obj\Debug\net10.0\refint\TaskFlow.Api.dll
 D:\TaskFlow.Api\obj\Debug\net10.0\TaskFlow.Api.pdb
 D:\TaskFlow.Api\obj\Debug\net10.0\TaskFlow.Api.genruntimeconfig.cache
 D:\TaskFlow.Api\obj\Debug\net10.0\ref\TaskFlow.Api.dll
+C:\Users\Pedram Sheikhrahimi\Documents\Projects\Practice\TaskFlow.Api\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

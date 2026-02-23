@@ -5,11 +5,11 @@ namespace TaskFlow.Api.DTOs.Tasks;
 
 public class CreateTaskDto
 {
-  [Required]
-  [MaxLength(200)]
-  public string Title { get; set; } = default!;
+    [Required]
+    [MaxLength(200)]
+    public string Title { get; set; } = default!;
 
-  public DateTime? DueDate { get; set; }
+    public DateTime? DueDate { get; set; }
 
-  public CurrentTaskStatus Status { get; set; } = CurrentTaskStatus.Todo;
+    public CurrentTaskStatus Status { get; set; } = CurrentTaskStatus.Todo;
 }

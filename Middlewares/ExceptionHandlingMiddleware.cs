@@ -6,47 +6,47 @@ namespace TaskFlow.Api.Middlewares;
 
 public class ExceptionHandlingMiddleware
 {
-  private readonly RequestDelegate _next;
-  private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-  public ExceptionHandlingMiddleware(
-      RequestDelegate next,
-      ILogger<ExceptionHandlingMiddleware> logger)
-  {
-    _next = next;
-    _logger = logger;
-  }
-
-  public async Task InvokeAsync(HttpContext context)
-  {
-    try
+    public ExceptionHandlingMiddleware(
+        RequestDelegate next,
+        ILogger<ExceptionHandlingMiddleware> logger)
     {
-      await _next(context);
+        _next = next;
+        _logger = logger;
     }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Unhandled exception occurred");
 
-      await HandleExceptionAsync(context, ex);
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unhandled exception occurred");
+
+            await HandleExceptionAsync(context, ex);
+        }
     }
-  }
 
-  private static async Task HandleExceptionAsync(
-      HttpContext context,
-      Exception exception)
-  {
-    context.Response.ContentType = "application/json";
-    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-    var response = new ErrorResponse
+    private static async Task HandleExceptionAsync(
+        HttpContext context,
+        Exception exception)
     {
-      StatusCode = context.Response.StatusCode,
-      Message = "An unexpected error occurred.",
-      Details = exception.Message
-    };
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-    var json = JsonSerializer.Serialize(response);
+        ErrorResponse response = new()
+        {
+            StatusCode = context.Response.StatusCode,
+            Message = "An unexpected error occurred.",
+            Details = exception.Message
+        };
 
-    await context.Response.WriteAsync(json);
-  }
+        string json = JsonSerializer.Serialize(response);
+
+        await context.Response.WriteAsync(json);
+    }
 }
